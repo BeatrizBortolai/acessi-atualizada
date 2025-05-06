@@ -74,6 +74,14 @@ public class NotificacaoResource {
                 .build();
     }
 
+    @GET
+    @Path("/listar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarNotificacoes() {
+        List<Notificacao> notificacoes = notificacaoRepository.listar(); // implemente esse metodo
+        return Response.ok(notificacoes).build();
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNotificacao(Notificacao notificacao){
