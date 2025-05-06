@@ -5,6 +5,7 @@ import org.acme.infrastructure.DatabaseConfig;
 import org.acme.repositories.CrudRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

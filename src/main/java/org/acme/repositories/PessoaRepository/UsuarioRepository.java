@@ -1,24 +1,20 @@
 package org.acme.repositories.PessoaRepository;
 
 import com.google.gson.GsonBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.acme.entities.Pessoa.Usuario;
+import org.acme.extensions.LocalDateTimeGsonAdapter;
 import org.acme.infrastructure.DatabaseConfig;
 import org.acme.repositories.CrudRepository;
-import org.acme.extensions.LocalDateTimeGsonAdapter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class UsuarioRepository implements CrudRepository<Usuario> {
     public static Logger logger = LogManager.getLogger(UsuarioRepository.class);

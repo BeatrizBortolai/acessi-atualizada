@@ -3,7 +3,6 @@ package org.acme.entities.Problema;
 import org.acme.entities.Pessoa._BaseEntity;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Notificacao extends _BaseEntity {

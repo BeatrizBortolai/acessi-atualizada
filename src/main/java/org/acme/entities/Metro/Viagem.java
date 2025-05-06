@@ -4,7 +4,6 @@ import org.acme.entities.Pessoa.Passageiro;
 import org.acme.entities.Pessoa._BaseEntity;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Viagem extends _BaseEntity {
     private int duracao;

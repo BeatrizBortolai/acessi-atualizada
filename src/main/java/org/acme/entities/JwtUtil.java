@@ -1,7 +1,7 @@
 package org.acme.entities;
 
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 

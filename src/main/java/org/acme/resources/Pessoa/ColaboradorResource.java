@@ -4,15 +4,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.dtos.Pessoa.SearchColaboradorDto;
-import org.acme.dtos.Pessoa.SearchUsuarioDto;
 import org.acme.entities.Pessoa.Colaborador;
-import org.acme.entities.Pessoa.Usuario;
 import org.acme.repositories.PessoaRepository.ColaboradorRepository;
-import org.acme.repositories.PessoaRepository.UsuarioRepository;
 import org.acme.services.PessoaService.ColaboradorService;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

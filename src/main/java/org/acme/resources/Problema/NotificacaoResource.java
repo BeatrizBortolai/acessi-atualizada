@@ -5,10 +5,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 import org.acme.dtos.Problema.NotificacaoCriadaDto;
 import org.acme.dtos.Problema.SearchNotificacaoDto;
-
 import org.acme.entities.Problema.Notificacao;
 import org.acme.repositories.ProblemaRepository.NotificacaoRepository;
 import org.acme.services.ProblemaService.NotificacaoService;

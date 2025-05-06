@@ -4,11 +4,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.dtos.Metro.SearchViagemDto;
-import org.acme.dtos.Pessoa.SearchColaboradorDto;
 import org.acme.entities.Metro.Viagem;
-import org.acme.entities.Pessoa.Colaborador;
 import org.acme.repositories.MetroRepository.ViagemRepository;
-import org.acme.repositories.PessoaRepository.ColaboradorRepository;
 import org.acme.services.MetroService.ViagemService;
 import org.jboss.resteasy.reactive.RestResponse;
 
