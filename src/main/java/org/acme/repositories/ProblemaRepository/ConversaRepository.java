@@ -4,6 +4,8 @@ import org.acme.entities.Pessoa.Usuario;
 import org.acme.entities.Problema.Conversa;
 import org.acme.infrastructure.DatabaseConfig;
 import org.acme.repositories.CrudRepository;
+import org.acme.repositories.PessoaRepository.PassageiroRepository;
+import org.acme.repositories.PessoaRepository.UsuarioRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,16 +16,17 @@ import java.util.Optional;
 
 public class ConversaRepository implements CrudRepository<Conversa> {
     public static Logger logger = LogManager.getLogger(ConversaRepository.class);
+    private final UsuarioRepository usuarioRepository = new UsuarioRepository();
     private List<Conversa> conversas = new ArrayList<>(List.of());
 
     @Override
     public void adicionar(Conversa object) {
-        var query = "INSERT INTO CONVERSAACESSI (DELETED, USUARIO, ASSUNTO, MODELOLLM, MENSAGEM, ENCERRADA) VALUES (?,?,?,?,?,?)";
+        var query = "INSERT INTO CONVERSAACESSI (DELETED, USUARIO_ID, ASSUNTO, MODELOLLM, MENSAGEM, ENCERRADA) VALUES (?,?,?,?,?,?)";
         try(var conn = DatabaseConfig.getConnection())
         {
             var stmt = conn.prepareStatement(query);
             stmt.setBoolean(1, false);
-            stmt.setObject(2, object.getUsuario());
+            stmt.setInt(2, object.getUsuario().getId());
             stmt.setString(3, object.getAssunto());
             stmt.setString(4, object.getModeloLLM());
             stmt.setString(5, object.getMensagem());
@@ -90,8 +93,8 @@ public class ConversaRepository implements CrudRepository<Conversa> {
                 var conversa = new Conversa();
                 conversa.setId(result.getInt("id"));
                 conversa.setDeleted(result.getBoolean("deleted"));
-                Usuario usuario = new Usuario();
-                usuario.setId(result.getInt("usuario"));
+                int usuarioId = result.getInt("usuario_id");
+                Usuario usuario = usuarioRepository.buscarPorId(usuarioId).orElse(null);
                 conversa.setUsuario(usuario);
                 conversa.setAssunto(result.getString("assunto"));
                 conversa.setModeloLLM(result.getString("modeloLLM"));
@@ -122,7 +125,7 @@ public class ConversaRepository implements CrudRepository<Conversa> {
                 conversa.setId(result.getInt("id"));
                 conversa.setDeleted(result.getBoolean("deleted"));
                 Usuario usuario = new Usuario();
-                usuario.setId(result.getInt("usuario"));
+                usuario.setId(result.getInt("usuario_id"));
                 conversa.setUsuario(usuario);
                 conversa.setAssunto(result.getString("assunto"));
                 conversa.setModeloLLM(result.getString("modeloLLM"));
@@ -152,7 +155,7 @@ public class ConversaRepository implements CrudRepository<Conversa> {
                 conversa.setId(result.getInt("id"));
                 conversa.setDeleted(result.getBoolean("deleted"));
                 Usuario usuario = new Usuario();
-                usuario.setId(result.getInt("usuario"));
+                usuario.setId(result.getInt("usuario_id"));
                 conversa.setUsuario(usuario);
                 conversa.setAssunto(result.getString("assunto"));
                 conversa.setModeloLLM(result.getString("modeloLLM"));

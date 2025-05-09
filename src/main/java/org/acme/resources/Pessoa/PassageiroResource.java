@@ -34,13 +34,6 @@ public class PassageiroResource {
         List<Passageiro> passageiros = passageiroRepository.listarTodos();
 
         var filteredPassageiros = passageiros.stream()
-                .filter(e -> e.getNome().contains(name.orElse("")))
-                .filter(e -> e.getEmail().contains(text.orElse("")))
-                .filter(e -> e.getSenha().contains(text.orElse("")))
-                .sorted(direction.orElse("asc").equals("desc") ?
-                        (c1, c2) -> c2.getNome().compareToIgnoreCase(c1.getNome()):
-                        (c1, c2) -> c1.getEmail().compareToIgnoreCase(c2.getEmail())
-                )
                 .toList();
 
         if(filteredPassageiros.isEmpty())

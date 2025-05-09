@@ -39,13 +39,7 @@ public class NotificacaoResource {
 
         var filteredNotificacoes = notificacoes.stream()
                 .filter(e -> e.getTitulo().contains(name.orElse("")))
-                .filter(e -> e.getConteudo().contains(text.orElse("")))
                 .filter(e -> e.getLinha().contains(text.orElse("")))
-                .filter(e -> e.getTipoOcorrencia().contains(text.orElse("")))
-                .sorted(direction.orElse("asc").equals("desc") ?
-                        (c1, c2) -> c2.getTitulo().compareToIgnoreCase(c1.getTitulo()):
-                        (c1, c2) -> c1.getConteudo().compareToIgnoreCase(c2.getConteudo())
-                )
                 .toList();
 
         if(filteredNotificacoes.isEmpty())

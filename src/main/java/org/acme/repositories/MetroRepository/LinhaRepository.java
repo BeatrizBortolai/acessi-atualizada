@@ -20,13 +20,12 @@ public class LinhaRepository implements CrudRepository<Linha> {
 
     @Override
     public void adicionar(Linha object) {
-        var query = "INSERT INTO LINHAACESSI (DELETED, NOME, ESTACOES) VALUES (?,?,?)";
+        var query = "INSERT INTO LINHAACESSI (DELETED, NOME) VALUES (?,?)";
         try(var conn = DatabaseConfig.getConnection())
         {
             var stmt = conn.prepareStatement(query);
             stmt.setBoolean(1, false);
             stmt.setString(2, object.getNome());
-            stmt.setObject(3, object.getEstacoes());
             var result = stmt.executeUpdate();
             if(result > 0)
                 logger.info("Linha adicionada com sucesso!");
@@ -90,15 +89,6 @@ public class LinhaRepository implements CrudRepository<Linha> {
                 linha.setId(result.getInt("id"));
                 linha.setDeleted(result.getBoolean("deleted"));
                 linha.setNome(result.getString("nome"));
-                String estacoesString = result.getString("estacao");
-                List<Estacao> estacoes = Arrays.stream(estacoesString.split(","))
-                        .map(nome -> {
-                            Estacao estacao = new Estacao();
-                            estacao.setNome(nome.trim());
-                            return estacao;
-                        })
-                        .collect(Collectors.toList());
-                linha.setEstacoes(estacoes);
                 linhasDb.add(linha);
             }
             connection.close();
@@ -126,15 +116,6 @@ public class LinhaRepository implements CrudRepository<Linha> {
                 linha.setId(result.getInt("id"));
                 linha.setDeleted(result.getBoolean("deleted"));
                 linha.setNome(result.getString("nome"));
-                String estacoesString = result.getString("estacao");
-                List<Estacao> estacoes = Arrays.stream(estacoesString.split(","))
-                        .map(nome -> {
-                            Estacao estacao = new Estacao();
-                            estacao.setNome(nome.trim());
-                            return estacao;
-                        })
-                        .collect(Collectors.toList());
-                linha.setEstacoes(estacoes);
                 linhasDb.add(linha);
             }
             return linhasDb;
@@ -158,15 +139,6 @@ public class LinhaRepository implements CrudRepository<Linha> {
                 linha.setId(result.getInt("id"));
                 linha.setDeleted(result.getBoolean("deleted"));
                 linha.setNome(result.getString("nome"));
-                String estacoesString = result.getString("estacao");
-                List<Estacao> estacoes = Arrays.stream(estacoesString.split(","))
-                        .map(nome -> {
-                            Estacao estacao = new Estacao();
-                            estacao.setNome(nome.trim());
-                            return estacao;
-                        })
-                        .collect(Collectors.toList());
-                linha.setEstacoes(estacoes);
                 return Optional.of(linha);
             }
         }

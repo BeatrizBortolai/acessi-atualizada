@@ -20,12 +20,6 @@ public class LinhaResource {
     private LinhaRepository linhaRepository = new LinhaRepository();
     private final LinhaService linhaService = new LinhaService();
 
-    private String listaDeNomes(List<Estacao> estacoes) {
-        return estacoes.stream()
-                .map(Estacao::getNome)
-                .collect(Collectors.joining(", "));
-    }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Linha> getLinhas() { return linhaRepository.listarTodos(); }
@@ -43,13 +37,6 @@ public class LinhaResource {
 
         var filteredLinhas = linhas.stream()
                 .filter(e -> e.getNome().contains(name.orElse("")))
-                .filter(e -> (e.getEstacoes().contains(text.orElse(""))))
-                .sorted(direction.orElse("asc").equals("desc") ?
-                        (c1, c2) -> listaDeNomes(c2.getEstacoes())
-                                .compareToIgnoreCase(listaDeNomes(c1.getEstacoes())) :
-                        (c1, c2) -> listaDeNomes(c1.getEstacoes())
-                                .compareToIgnoreCase(listaDeNomes(c2.getEstacoes()))
-                )
                 .toList();
 
         if(filteredLinhas.isEmpty())

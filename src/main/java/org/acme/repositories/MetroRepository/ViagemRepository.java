@@ -5,6 +5,7 @@ import org.acme.entities.Metro.Viagem;
 import org.acme.entities.Pessoa.Passageiro;
 import org.acme.infrastructure.DatabaseConfig;
 import org.acme.repositories.CrudRepository;
+import org.acme.repositories.PessoaRepository.PassageiroRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,19 +16,23 @@ import java.util.Optional;
 
 public class ViagemRepository implements CrudRepository<Viagem> {
     public static Logger logger = LogManager.getLogger(ViagemRepository.class);
+    private final PassageiroRepository passageiroRepository = new PassageiroRepository();
+    private final EstacaoRepository estacaoRepository = new EstacaoRepository();
+
+
     private List<Viagem> viagens = new ArrayList<>(List.of());
 
     @Override
     public void adicionar(Viagem object) {
-        var query = "INSERT INTO VIAGEMACESSI (DELETED, DURACAO, PASSAGEIRO, ESTACAOORIGEM, ESTACAODESTINO) VALUES (?,?,?,?,?,?)";
+        var query = "INSERT INTO VIAGEMACESSI (DELETED, DURACAO, PASSAGEIRO_ID, ESTACAOORIGEM_ID, ESTACAODESTINO_ID) VALUES (?,?,?,?,?)";
         try(var conn = DatabaseConfig.getConnection())
         {
             var stmt = conn.prepareStatement(query);
             stmt.setBoolean(1, false);
             stmt.setInt(2, object.getDuracao());
-            stmt.setObject(3, object.getPassageiro());
-            stmt.setObject(4, object.getEstacaoOrigem());
-            stmt.setObject(5, object.getEstacaoDestino());
+            stmt.setInt(3, object.getPassageiro().getId());
+            stmt.setInt(4, object.getEstacaoOrigem().getId());
+            stmt.setInt(5, object.getEstacaoDestino().getId());
             var result = stmt.executeUpdate();
             if(result > 0)
                 logger.info("Viagem adicionada com sucesso!");
@@ -77,40 +82,47 @@ public class ViagemRepository implements CrudRepository<Viagem> {
         }
     }
 
-    @Override
     public List<Viagem> listarTodos() {
         var viagensDb = new ArrayList<Viagem>();
         var query = "SELECT * FROM VIAGEMACESSI";
-        try (var connection = DatabaseConfig.getConnection())
-        {
+
+        try (var connection = DatabaseConfig.getConnection()) {
             var statement = connection.prepareStatement(query);
             var result = statement.executeQuery();
-            while (result.next())
-            {
+
+            while (result.next()) {
                 var viagem = new Viagem();
                 viagem.setId(result.getInt("id"));
                 viagem.setDeleted(result.getBoolean("deleted"));
                 viagem.setDuracao(result.getInt("duracao"));
-                Passageiro passageiro = new Passageiro();
-                passageiro.setId(result.getInt("passageiro"));
+
+                // Pegando os IDs das tabelas relacionadas
+                int passageiroId = result.getInt("passageiro_id");
+                int estacaoOrigemId = result.getInt("estacaoorigem_id");
+                int estacaoDestinoId = result.getInt("estacaodestino_id");
+
+                // Buscar nos repositórios (você precisa criar esses métodos)
+                Passageiro passageiro = passageiroRepository.buscarPorId(passageiroId).orElse(null);
+                Estacao estacaoOrigem = estacaoRepository.buscarPorId(estacaoOrigemId).orElse(null);
+                Estacao estacaoDestino = estacaoRepository.buscarPorId(estacaoDestinoId).orElse(null);
+
+                // Setando nos objetos
                 viagem.setPassageiro(passageiro);
-                Estacao estacaoOrigem = new Estacao();
-                estacaoOrigem.setNome(result.getString("estacaoOrigem"));
                 viagem.setEstacaoOrigem(estacaoOrigem);
-                Estacao estacaoDestino = new Estacao();
-                estacaoDestino.setNome(result.getString("estacaoDestino"));
                 viagem.setEstacaoDestino(estacaoDestino);
+
                 viagensDb.add(viagem);
             }
-            connection.close();
+
             return viagensDb;
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             logger.error(e);
         }
+
         return null;
     }
+
 
     @Override
     public List<Viagem> listar() {
@@ -160,13 +172,13 @@ public class ViagemRepository implements CrudRepository<Viagem> {
                 viagem.setDeleted(result.getBoolean("deleted"));
                 viagem.setDuracao(result.getInt("duracao"));
                 Passageiro passageiro = new Passageiro();
-                passageiro.setId(result.getInt("passageiro"));
+                passageiro.setId(result.getInt("passageiro_id"));
                 viagem.setPassageiro(passageiro);
                 Estacao estacaoOrigem = new Estacao();
-                estacaoOrigem.setNome(result.getString("estacaoOrigem"));
+                estacaoOrigem.setNome(result.getString("estacaoOrigem_id"));
                 viagem.setEstacaoOrigem(estacaoOrigem);
                 Estacao estacaoDestino = new Estacao();
-                estacaoDestino.setNome(result.getString("estacaoDestino"));
+                estacaoDestino.setNome(result.getString("estacaoDestino_id"));
                 viagem.setEstacaoDestino(estacaoDestino);
 
                 return Optional.of(viagem);

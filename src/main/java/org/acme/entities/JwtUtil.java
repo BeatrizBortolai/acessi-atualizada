@@ -25,16 +25,11 @@ public class JwtUtil {
         return builder.compact();
     }
 
-    public static String validarToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new RuntimeException("Token inválido ou mal formatado");
-        }
-        String token = authHeader.substring("Bearer ".length());
-
+    public static String validarToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(CHAVE)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(token.replace("Bearer ", ""))
                 .getBody()
                 .getSubject(); // Aqui retorna o ID como String
     }

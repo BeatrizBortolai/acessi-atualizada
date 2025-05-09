@@ -2,8 +2,10 @@ package org.acme.repositories.MetroRepository;
 
 import org.acme.entities.Metro.Linha;
 import org.acme.entities.Metro.Trem;
+import org.acme.entities.Pessoa.Passageiro;
 import org.acme.infrastructure.DatabaseConfig;
 import org.acme.repositories.CrudRepository;
+import org.acme.repositories.PessoaRepository.PassageiroRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,18 +16,19 @@ import java.util.Optional;
 
 public class TremRepository implements CrudRepository<Trem> {
     public static Logger logger = LogManager.getLogger(TremRepository.class);
+    private final LinhaRepository linhaRepository = new LinhaRepository();
     private List<Trem> trens = new ArrayList<>(List.of());
 
     @Override
     public void adicionar(Trem object) {
-        var query = "INSERT INTO TREMACESSI (DELETED, ORIGEM, DESTINO, LINHA, CAPACIDADEMAXIMA, CAPACIDADEATUAL, OPERANDO) VALUES (?,?,?,?,?,?,?)";
+        var query = "INSERT INTO TREMACESSI (DELETED, ORIGEM, DESTINO, LINHA_ID, CAPACIDADEMAXIMA, CAPACIDADEATUAL, OPERANDO) VALUES (?,?,?,?,?,?,?)";
         try(var conn = DatabaseConfig.getConnection())
         {
             var stmt = conn.prepareStatement(query);
             stmt.setBoolean(1, false);
             stmt.setString(2, object.getOrigem());
             stmt.setString(3, object.getDestino());
-            stmt.setObject(4, object.getLinha());
+            stmt.setInt(4, object.getLinha().getId());
             stmt.setInt(5, object.getCapacidadeMaxima());
             stmt.setInt(6, object.getCapacidadeAtual());
             stmt.setBoolean(7, true);
@@ -91,9 +94,11 @@ public class TremRepository implements CrudRepository<Trem> {
                 var trem = new Trem();
                 trem.setId(result.getInt("id"));
                 trem.setDeleted(result.getBoolean("deleted"));
-                Linha linha = new Linha();
-                linha.setNome(result.getString("linha"));
+                int linhaId = result.getInt("linha_id");
+                Linha linha = linhaRepository.buscarPorId(linhaId).orElse(null);
                 trem.setLinha(linha);
+                trem.setOrigem(result.getString("origem"));
+                trem.setDestino(result.getString("destino"));
                 trem.setCapacidadeAtual(result.getInt("capacidadeAtual"));
                 trem.setCapacidadeMaxima(result.getInt("capacidadeMaxima"));
                 trem.setOperando(result.getBoolean("operando"));
@@ -123,9 +128,11 @@ public class TremRepository implements CrudRepository<Trem> {
                 var trem = new Trem();
                 trem.setId(result.getInt("id"));
                 trem.setDeleted(result.getBoolean("deleted"));
-                Linha linha = new Linha();
-                linha.setNome(result.getString("linha"));
+                int linhaId = result.getInt("linha_id");
+                Linha linha = linhaRepository.buscarPorId(linhaId).orElse(null);
                 trem.setLinha(linha);
+                trem.setOrigem(result.getString("origem"));
+                trem.setDestino(result.getString("destino"));
                 trem.setCapacidadeAtual(result.getInt("capacidadeAtual"));
                 trem.setCapacidadeMaxima(result.getInt("capacidadeMaxima"));
                 trem.setOperando(result.getBoolean("operando"));
@@ -152,7 +159,7 @@ public class TremRepository implements CrudRepository<Trem> {
                 trem.setId(result.getInt("id"));
                 trem.setDeleted(result.getBoolean("deleted"));
                 Linha linha = new Linha();
-                linha.setNome(result.getString("linha"));
+                linha.setNome(result.getString("linha_id"));
                 trem.setLinha(linha);
                 trem.setCapacidadeAtual(result.getInt("capacidadeAtual"));
                 trem.setCapacidadeMaxima(result.getInt("capacidadeMaxima"));
