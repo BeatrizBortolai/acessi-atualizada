@@ -158,6 +158,8 @@ public class TremRepository implements CrudRepository<Trem> {
                 var trem = new Trem();
                 trem.setId(result.getInt("id"));
                 trem.setDeleted(result.getBoolean("deleted"));
+                trem.setOrigem(result.getString("origem"));
+                trem.setDestino(result.getString("destino"));
                 Linha linha = new Linha();
                 linha.setNome(result.getString("linha_id"));
                 trem.setLinha(linha);

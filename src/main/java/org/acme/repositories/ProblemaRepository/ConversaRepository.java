@@ -154,8 +154,8 @@ public class ConversaRepository implements CrudRepository<Conversa> {
                 var conversa = new Conversa();
                 conversa.setId(result.getInt("id"));
                 conversa.setDeleted(result.getBoolean("deleted"));
-                Usuario usuario = new Usuario();
-                usuario.setId(result.getInt("usuario_id"));
+                int usuarioId = result.getInt("usuario_id");
+                Usuario usuario = usuarioRepository.buscarPorId(usuarioId).orElse(null);
                 conversa.setUsuario(usuario);
                 conversa.setAssunto(result.getString("assunto"));
                 conversa.setModeloLLM(result.getString("modeloLLM"));

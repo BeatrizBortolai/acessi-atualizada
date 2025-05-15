@@ -139,13 +139,13 @@ public class ViagemRepository implements CrudRepository<Viagem> {
                 viagem.setDeleted(result.getBoolean("deleted"));
                 viagem.setDuracao(result.getInt("duracao"));
                 Passageiro passageiro = new Passageiro();
-                passageiro.setId(result.getInt("passageiro"));
+                passageiro.setId(result.getInt("passageiro_id"));
                 viagem.setPassageiro(passageiro);
                 Estacao estacaoOrigem = new Estacao();
-                estacaoOrigem.setNome(result.getString("estacaoOrigem"));
+                estacaoOrigem.setId(result.getInt("estacaoorigem_id"));
                 viagem.setEstacaoOrigem(estacaoOrigem);
                 Estacao estacaoDestino = new Estacao();
-                estacaoDestino.setNome(result.getString("estacaoDestino"));
+                estacaoDestino.setId(result.getInt("estacaodestino_id"));
                 viagem.setEstacaoDestino(estacaoDestino);
 
                 viagensDb.add(viagem);
@@ -171,14 +171,20 @@ public class ViagemRepository implements CrudRepository<Viagem> {
                 viagem.setId(result.getInt("id"));
                 viagem.setDeleted(result.getBoolean("deleted"));
                 viagem.setDuracao(result.getInt("duracao"));
-                Passageiro passageiro = new Passageiro();
-                passageiro.setId(result.getInt("passageiro_id"));
+
+                // Pegando os IDs das tabelas relacionadas
+                int passageiroId = result.getInt("passageiro_id");
+                int estacaoOrigemId = result.getInt("estacaoorigem_id");
+                int estacaoDestinoId = result.getInt("estacaodestino_id");
+
+                // Buscar nos repositórios (você precisa criar esses métodos)
+                Passageiro passageiro = passageiroRepository.buscarPorId(passageiroId).orElse(null);
+                Estacao estacaoOrigem = estacaoRepository.buscarPorId(estacaoOrigemId).orElse(null);
+                Estacao estacaoDestino = estacaoRepository.buscarPorId(estacaoDestinoId).orElse(null);
+
+                // Setando nos objetos
                 viagem.setPassageiro(passageiro);
-                Estacao estacaoOrigem = new Estacao();
-                estacaoOrigem.setNome(result.getString("estacaoOrigem_id"));
                 viagem.setEstacaoOrigem(estacaoOrigem);
-                Estacao estacaoDestino = new Estacao();
-                estacaoDestino.setNome(result.getString("estacaoDestino_id"));
                 viagem.setEstacaoDestino(estacaoDestino);
 
                 return Optional.of(viagem);

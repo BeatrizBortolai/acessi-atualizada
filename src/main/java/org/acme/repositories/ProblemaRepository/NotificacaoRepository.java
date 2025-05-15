@@ -38,7 +38,7 @@ public class NotificacaoRepository implements CrudRepository<Notificacao> {
 
     @Override
     public void atualizar(int id, Notificacao notificacao) {
-        var query = "UPDATE NOTIFICACAOACESSI SET titulo = ?, conteudo = ?, linha = ?, tipoOcorrencia = ?, WHERE id = ?";
+        var query = "UPDATE NOTIFICACAOACESSI SET titulo = ?, conteudo = ?, linha = ?, tipoOcorrencia = ? WHERE id = ?";
 
         try (var conn = DatabaseConfig.getConnection()) {
             var stmt = conn.prepareStatement(query);
